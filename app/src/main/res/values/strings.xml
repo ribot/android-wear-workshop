@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Android Wear</string>
-    <string name="hello">Hello World</string>
-    <string name="good_luck">Good luck working on your new project!</string>
     <string name="get_issues">Get Issues</string>
     <string name="loading">Loading...</string>
 </resources>

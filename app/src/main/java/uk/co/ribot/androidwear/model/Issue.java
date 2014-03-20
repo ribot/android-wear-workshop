@@ -4,6 +4,7 @@ public class Issue {
     public String title;
     public String body;
     public int number;
+    public User user;
 
     @Override
     public boolean equals(Object issue) {

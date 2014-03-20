@@ -1,10 +1,7 @@
 package uk.co.ribot.androidwear;
 
 import android.app.Activity;
-import android.app.NotificationManager;
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -16,6 +13,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import uk.co.ribot.androidwear.api.GitHubApi;
 import uk.co.ribot.androidwear.model.Issue;
+import uk.co.ribot.androidwear.util.NotificationUtils;
 
 import java.util.List;
 
@@ -43,40 +41,30 @@ public class MainActivity extends Activity {
         mGetIssuesButton.setEnabled(false);
         mMessageTextView.setText(R.string.loading);
 
-        GitHubApi.get().getIssues("ribot", "android-wear-workshop", new Callback<List<Issue>>() {
-            @Override
-            public void success(List<Issue> issues, Response response) {
-                if (mIssues != null) {
-                    for (Issue issue : issues) {
-                        if (!mIssues.contains(issue)) {
-                            sendNotification(issue);
-                        }
+        GitHubApi.get().getIssues("ribot", "android-wear-workshop", networkCallback);
+    }
+
+    private Callback<List<Issue>> networkCallback = new Callback<List<Issue>>() {
+        @Override
+        public void success(List<Issue> issues, Response response) {
+            if (mIssues != null) {
+                for (Issue issue : issues) {
+                    if (!mIssues.contains(issue)) {
+                        NotificationUtils.notify(MainActivity.this, issue);
                     }
                 }
-
-                mMessageTextView.setText("" + issues.size());
-                mIssues = issues;
-
-                mGetIssuesButton.setEnabled(true);
             }
 
-            @Override
-            public void failure(RetrofitError error) {
-                mMessageTextView.setText("Error: " + error);
-                mGetIssuesButton.setEnabled(true);
-            }
-        });
-    }
+            mIssues = issues;
 
-    private void sendNotification(Issue issue) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-            .setSmallIcon(R.drawable.ic_launcher)
-            .setContentTitle(issue.title)
-            .setContentText(issue.body);
+            mMessageTextView.setText("" + issues.size());
+            mGetIssuesButton.setEnabled(true);
+        }
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(1234, builder.build());
-    }
-
-
+        @Override
+        public void failure(RetrofitError error) {
+            mMessageTextView.setText("Error: " + error);
+            mGetIssuesButton.setEnabled(true);
+        }
+    };
 }
