@@ -1,10 +1,9 @@
 package uk.co.ribot.androidwear.model;
 
 public class Issue {
-    String state;
-    String title;
-    String body;
-    int number;
+    public String title;
+    public String body;
+    public int number;
 
     @Override
     public boolean equals(Object issue) {

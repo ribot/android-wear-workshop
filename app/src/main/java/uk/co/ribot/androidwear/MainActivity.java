@@ -1,8 +1,10 @@
 package uk.co.ribot.androidwear;
 
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -47,7 +49,7 @@ public class MainActivity extends Activity {
                 if (mIssues != null) {
                     for (Issue issue : issues) {
                         if (!mIssues.contains(issue)) {
-                            Log.d("WOW", "AMAZING:" + issue);
+                            sendNotification(issue);
                         }
                     }
                 }
@@ -65,4 +67,16 @@ public class MainActivity extends Activity {
             }
         });
     }
+
+    private void sendNotification(Issue issue) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+            .setSmallIcon(R.drawable.ic_launcher)
+            .setContentTitle(issue.title)
+            .setContentText(issue.body);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(1234, builder.build());
+    }
+
+
 }
