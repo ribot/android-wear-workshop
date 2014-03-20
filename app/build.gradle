@@ -17,6 +17,8 @@ dependencies {
     // App dependencies
     compile fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     compile 'com.android.support:support-v4:19.+'
+    compile 'com.squareup.retrofit:retrofit:1.2.+'
+    compile 'com.squareup.okhttp:okhttp:1.5.+'
 
     // Test dependencies
     androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.+'

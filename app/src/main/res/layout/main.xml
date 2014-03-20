@@ -5,16 +5,9 @@
     android:layout_height="fill_parent"
     android:gravity="center">
     <TextView
+        android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/hello"
-        android:textSize="32sp" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/good_luck"
-        android:textSize="18sp"
-        android:textStyle="italic" />
+        android:textSize="24sp" />
 </LinearLayout>

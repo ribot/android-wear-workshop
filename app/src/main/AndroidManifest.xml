@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="uk.co.ribot.androidwear">
 
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <!-- Used by instrumentation tests only. Do not include in production apps unless necessary! -->
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
