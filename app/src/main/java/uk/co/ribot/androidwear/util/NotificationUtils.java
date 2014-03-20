@@ -13,6 +13,10 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class NotificationUtils {
     public static void notify(final Context context, final Issue issue) {
+        /*
+         * Ideally you would create the notification without the large icon, then add it later
+         * To keep things simple for the demo we're building the whole notification at once.
+         */
         Picasso.with(context)
                 .load(issue.user.avatarUrl)
                 .into(new Target() {
@@ -39,6 +43,6 @@ public class NotificationUtils {
         }
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(1234, builder.build());
+        notificationManager.notify(issue.id, builder.build());
     }
 }

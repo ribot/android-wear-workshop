@@ -1,15 +1,17 @@
 package uk.co.ribot.androidwear.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Issue {
     public String title;
     public String body;
-    public int number;
+    @SerializedName("number") public int id;
     public User user;
 
     @Override
     public boolean equals(Object issue) {
         if (issue != null && issue instanceof Issue) {
-            return this.number == ((Issue) issue).number;
+            return this.id == ((Issue) issue).id;
         } else {
             return false;
         }
@@ -18,7 +20,7 @@ public class Issue {
     @Override
     public int hashCode() {
         //TODO implement a proper hashcode ;)
-        return number;
+        return id;
     }
 
     @Override
