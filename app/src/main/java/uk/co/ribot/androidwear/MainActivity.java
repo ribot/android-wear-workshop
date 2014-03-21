@@ -15,6 +15,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import uk.co.ribot.androidwear.api.GitHubApi;
 import uk.co.ribot.androidwear.api.GitHubApiService;
+import uk.co.ribot.androidwear.model.Comment;
 import uk.co.ribot.androidwear.model.Issue;
 import uk.co.ribot.androidwear.util.LoginUtils;
 import uk.co.ribot.androidwear.util.NotificationUtils;
@@ -65,13 +66,31 @@ public class MainActivity extends Activity {
         mGitHubApi.getIssues("ribot", "android-wear-workshop", issuesCallback);
     }
 
+    private void getComment(final Issue issue) {
+        mGitHubApi.getComments("ribot", "android-wear-workshop", issue.id, new Callback<List<Comment>>() {
+            @Override
+            public void success(List<Comment> comments, Response response) {
+                NotificationUtils.notify(MainActivity.this, issue, comments);
+                mGetIssuesButton.setEnabled(true);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e("AndroidWear", "Comment api error: " + error);
+
+                mMessageTextView.setText("Error: " + error);
+                mGetIssuesButton.setEnabled(true);
+            }
+        });
+    }
+
     private Callback<List<Issue>> issuesCallback = new Callback<List<Issue>>() {
         @Override
         public void success(List<Issue> issues, Response response) {
             if (mIssues != null) {
                 for (Issue issue : issues) {
                     if (!mIssues.contains(issue)) {
-                        NotificationUtils.notify(MainActivity.this, issue);
+                        getComment(issue);
                     }
                 }
             }

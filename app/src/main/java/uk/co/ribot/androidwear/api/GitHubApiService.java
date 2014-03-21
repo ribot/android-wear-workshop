@@ -29,4 +29,9 @@ public interface GitHubApiService {
                      @Body Comment comment,
                      Callback<Comment> callback);
 
+    @GET("/repos/{owner}/{repoName}/issues/{number}/comments")
+    void getComments(@Path("owner") String owner,
+                     @Path("repoName") String repoName,
+                     @Path("number") int number,
+                     Callback<List<Comment>> callback);
 }

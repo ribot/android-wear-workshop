@@ -78,8 +78,6 @@ public class GitHubService extends IntentService {
             @Override
             public void failure(RetrofitError error) {
                 //TODO Have notification ask you to retry
-                issue.state = "open";
-                NotificationUtils.notify(GitHubService.this, issue);
                 Log.d("AW", "Error closing issue:  " + error.getResponse().getStatus());
                 Log.d("AW", "Error closing issue:  " + error.getResponse().getReason());
                 Log.d("AW", "Error closing issue:  " + error.getResponse().getBody().toString());
@@ -98,8 +96,6 @@ public class GitHubService extends IntentService {
             @Override
             public void failure(RetrofitError error) {
                 //TODO Have notification ask you to retry
-                issue.state = "open";
-                NotificationUtils.notify(GitHubService.this, issue);
                 Log.d("AW", "Error closing issue:  " + error.getResponse().getStatus());
                 Log.d("AW", "Error closing issue:  " + error.getResponse().getReason());
                 Log.d("AW", "Error closing issue:  " + error.getResponse().getBody().toString());
