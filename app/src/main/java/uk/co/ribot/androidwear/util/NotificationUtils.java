@@ -10,6 +10,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import uk.co.ribot.androidwear.GitHubService;
 import uk.co.ribot.androidwear.R;
+import uk.co.ribot.androidwear.model.Comment;
 import uk.co.ribot.androidwear.model.Issue;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
@@ -35,6 +36,11 @@ public class NotificationUtils {
                 });
     }
 
+    public static void dismiss(Context context, Issue issue) {
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancel(issue.id);
+    }
+
     private static void buildAndNotify(Context context, Issue issue, Bitmap bigIcon) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_stat_general)
@@ -48,6 +54,11 @@ public class NotificationUtils {
         Intent closeIntent = GitHubService.getActionCloseIntent(context, issue);
         PendingIntent closePendingIntent = PendingIntent.getService(context, 0, closeIntent, 0);
         builder.addAction(R.drawable.ic_stat_close, context.getString(R.string.close), closePendingIntent);
+
+        Comment comment = new Comment("Test comment. Hi Ivan!");
+        Intent commentIntent = GitHubService.getActionCommentIntent(context, issue, comment);
+        PendingIntent commentPendingIntent = PendingIntent.getService(context, 0, commentIntent, 0);
+        builder.addAction(R.drawable.ic_stat_comment, context.getString(R.string.comment), commentPendingIntent);
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(issue.id, builder.build());
