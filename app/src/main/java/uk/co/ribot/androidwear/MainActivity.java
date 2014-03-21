@@ -53,6 +53,11 @@ public class MainActivity extends Activity {
         startActivity(intent);
     }
 
+    @OnClick(R.id.get_issues)
+    public void onGetIssuesClicked(View view) {
+        getIssues();
+    }
+
     private void getIssues() {
         mGetIssuesButton.setEnabled(false);
         mMessageTextView.setText(R.string.loading);

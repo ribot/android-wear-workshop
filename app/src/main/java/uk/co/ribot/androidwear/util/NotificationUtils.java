@@ -1,11 +1,14 @@
 package uk.co.ribot.androidwear.util;
 
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v4.app.NotificationCompat;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+import uk.co.ribot.androidwear.GitHubService;
 import uk.co.ribot.androidwear.R;
 import uk.co.ribot.androidwear.model.Issue;
 
@@ -41,6 +44,10 @@ public class NotificationUtils {
         if (bigIcon != null) {
             builder.setLargeIcon(bigIcon);
         }
+
+        Intent closeIntent = GitHubService.getActionCloseIntent(context, issue);
+        PendingIntent closePendingIntent = PendingIntent.getService(context, 0, closeIntent, 0);
+        builder.addAction(R.drawable.ic_launcher, context.getString(R.string.close), closePendingIntent);
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(issue.id, builder.build());

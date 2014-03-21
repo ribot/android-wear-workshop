@@ -7,6 +7,7 @@ public class Issue {
     public String body;
     @SerializedName("number") public int id;
     public User user;
+    public String state;
 
     @Override
     public boolean equals(Object issue) {

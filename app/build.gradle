@@ -10,8 +10,11 @@ buildscript {
 
     dependencies {
         classpath 'com.stanfy.spoon:spoon-gradle-plugin:0.9.+'
+        classpath 'com.jakewharton.hugo:hugo-plugin:1.0.1'
     }
 }
+
+apply plugin: 'hugo'
 
 dependencies {
     // App dependencies
@@ -21,7 +24,6 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.0.+'
     compile 'com.squareup.okhttp:okhttp:1.5.+'
     compile 'com.jakewharton:butterknife:4.0.+'
-
 
     // Test dependencies
     androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.+'

@@ -26,6 +26,11 @@
             android:name="uk.co.ribot.androidwear.LoginActivity"
             android:label="@string/title_activity_login" >
         </activity>
+
+        <service
+            android:name="uk.co.ribot.androidwear.GitHubService"
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>
