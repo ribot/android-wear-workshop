@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import com.google.gson.Gson;
-import hugo.weaving.DebugLog;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -17,7 +16,6 @@ public class GitHubService extends IntentService {
     private static final String ACTION_CLOSE = "uk.co.ribot.androidwear.action.CLOSE";
     private static final String ISSUE_STRING_EXTRA = "uk.co.ribot.androidwear.extra.ISSUE_STRING_EXTRA";
 
-    @DebugLog
     public static Intent getActionCloseIntent(Context context, Issue issue) {
         String issueString = new Gson().toJson(issue);
 
@@ -31,7 +29,7 @@ public class GitHubService extends IntentService {
         super("GitHubService");
     }
 
-    @Override @DebugLog
+    @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
@@ -42,7 +40,6 @@ public class GitHubService extends IntentService {
         }
     }
 
-    @DebugLog
     private void handleActionClose(String issueString) {
         Issue issue = new Gson().fromJson(issueString, Issue.class);
         issue.state = "closed";

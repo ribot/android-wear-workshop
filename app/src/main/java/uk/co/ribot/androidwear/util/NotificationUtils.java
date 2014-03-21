@@ -37,7 +37,7 @@ public class NotificationUtils {
 
     private static void buildAndNotify(Context context, Issue issue, Bitmap bigIcon) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-                .setSmallIcon(R.drawable.ic_launcher)
+                .setSmallIcon(R.drawable.ic_stat_general)
                 .setContentTitle(issue.title)
                 .setContentText(issue.body);
 
@@ -47,7 +47,7 @@ public class NotificationUtils {
 
         Intent closeIntent = GitHubService.getActionCloseIntent(context, issue);
         PendingIntent closePendingIntent = PendingIntent.getService(context, 0, closeIntent, 0);
-        builder.addAction(R.drawable.ic_launcher, context.getString(R.string.close), closePendingIntent);
+        builder.addAction(R.drawable.ic_stat_close, context.getString(R.string.close), closePendingIntent);
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(issue.id, builder.build());
