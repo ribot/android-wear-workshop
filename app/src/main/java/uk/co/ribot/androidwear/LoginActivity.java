@@ -1,12 +1,19 @@
 package uk.co.ribot.androidwear;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import uk.co.ribot.androidwear.api.GitHubApi;
+import uk.co.ribot.androidwear.api.TokenRequest;
+import uk.co.ribot.androidwear.model.AccessToken;
+import uk.co.ribot.androidwear.util.LoginUtils;
 
 public class LoginActivity extends Activity {
     public static final String CODE_EXTRA = "uk.co.ribot.androidwear.LoginActivity.CODE_EXTRA";
@@ -31,7 +38,7 @@ public class LoginActivity extends Activity {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             if (url.startsWith(CALLBACK_URL)) {
                 String code = url.split("code=")[1];
-                returnCode(code);
+                getAccessToken(code);
                 return true;
             }
 
@@ -39,10 +46,23 @@ public class LoginActivity extends Activity {
         }
     };
 
-    private void returnCode(String code) {
-        Intent data = new Intent();
-        data.putExtra(CODE_EXTRA, code);
-        setResult(RESULT_OK, data);
-        finish();
+    private void getAccessToken(String code) {
+        GitHubApi.getAuth().getAccessToken(new TokenRequest(code), accessTokenCallback);
     }
+
+    private Callback<AccessToken> accessTokenCallback = new Callback<AccessToken>() {
+        @Override
+        public void success(AccessToken accessToken, Response response) {
+            LoginUtils.setLoginToken(LoginActivity.this, accessToken.token);
+
+            setResult(RESULT_OK);
+            finish();
+        }
+
+        @Override
+        public void failure(RetrofitError error) {
+            // TODO: Show login error message
+            Log.e("AndroidWear", "Login api error: " + error);
+        }
+    };
 }

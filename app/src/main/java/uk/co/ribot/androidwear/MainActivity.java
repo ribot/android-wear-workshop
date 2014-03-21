@@ -15,23 +15,19 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import uk.co.ribot.androidwear.api.GitHubApi;
 import uk.co.ribot.androidwear.api.GitHubApiService;
-import uk.co.ribot.androidwear.api.GitHubAuthService;
-import uk.co.ribot.androidwear.api.TokenRequest;
-import uk.co.ribot.androidwear.model.AccessToken;
 import uk.co.ribot.androidwear.model.Issue;
+import uk.co.ribot.androidwear.util.LoginUtils;
 import uk.co.ribot.androidwear.util.NotificationUtils;
 
 import java.util.List;
 
 public class MainActivity extends Activity {
-    private static final int LOGIN_REQUEST = 1000;
-
     private final GitHubApiService mGitHubApi = GitHubApi.getApi();
-    private final GitHubAuthService mGitHubAuth = GitHubApi.getAuth();
     private List<Issue> mIssues;
 
     @InjectView(R.id.message) TextView mMessageTextView;
     @InjectView(R.id.get_issues) Button mGetIssuesButton;
+    @InjectView(R.id.sign_in) Button mSigninButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,40 +38,20 @@ public class MainActivity extends Activity {
         getIssues();
     }
 
-    ///
-    // Sign In
-    ///
+    @SuppressWarnings("MagicConstant")
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        boolean signedIn = LoginUtils.isLoggedIn(this);
+        mSigninButton.setVisibility(showIf(!signedIn));
+    }
 
     @OnClick(R.id.sign_in)
     public void onSignInClicked(View view) {
         Intent intent = new Intent(this, LoginActivity.class);
-        startActivityForResult(intent, LOGIN_REQUEST);
+        startActivity(intent);
     }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == LOGIN_REQUEST && resultCode == RESULT_OK) {
-            String code = data.getStringExtra(LoginActivity.CODE_EXTRA);
-            mGitHubAuth.getAccessToken(new TokenRequest(code), accessTokenCallback);
-        }
-    }
-
-    private Callback<AccessToken> accessTokenCallback = new Callback<AccessToken>() {
-        @Override
-        public void success(AccessToken accessToken, Response response) {
-            Log.d("AndroidWear", "accessToken: " + accessToken.token);
-        }
-
-        @Override
-        public void failure(RetrofitError error) {
-            // TODO: Show login error message
-            Log.e("AndroidWear", "Login api error: " + error);
-        }
-    };
-
-    ///
-    // Issues
-    ///
 
     private void getIssues() {
         mGetIssuesButton.setEnabled(false);
@@ -109,4 +85,8 @@ public class MainActivity extends Activity {
             mGetIssuesButton.setEnabled(true);
         }
     };
+
+    private int showIf(boolean test) {
+        return (test) ? View.VISIBLE : View.GONE;
+    }
 }
