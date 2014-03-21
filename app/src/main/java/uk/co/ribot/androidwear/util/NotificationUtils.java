@@ -12,6 +12,10 @@ import uk.co.ribot.androidwear.GitHubService;
 import uk.co.ribot.androidwear.R;
 import uk.co.ribot.androidwear.model.Comment;
 import uk.co.ribot.androidwear.model.Issue;
+import android.app.Notification;
+import android.preview.support.wearable.notifications.RemoteInput;
+import android.preview.support.wearable.notifications.WearableNotifications;
+import android.preview.support.wearable.notifications.WearableNotifications.Action;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
@@ -55,12 +59,23 @@ public class NotificationUtils {
         PendingIntent closePendingIntent = PendingIntent.getService(context, 0, closeIntent, 0);
         builder.addAction(R.drawable.ic_stat_close, context.getString(R.string.close), closePendingIntent);
 
-        Comment comment = new Comment("Test comment. Hi Ivan!");
-        Intent commentIntent = GitHubService.getActionCommentIntent(context, issue, comment);
+        
+
+        RemoteInput commentRemoteInput = new RemoteInput.Builder(GitHubService.EXTRA_COMMENT)
+                .setLabel("What's your comment")
+                .build();
+
+        Intent commentIntent = GitHubService.getActionCommentIntent(context, issue);
+        
         PendingIntent commentPendingIntent = PendingIntent.getService(context, 0, commentIntent, 0);
-        builder.addAction(R.drawable.ic_stat_comment, context.getString(R.string.comment), commentPendingIntent);
+        
+        Action commentAction = new Action.Builder(R.drawable.ic_stat_comment, context.getString(R.string.comment), commentPendingIntent)
+                .addRemoteInput(commentRemoteInput)
+                .build();
+
+        Notification notificaion = new WearableNotifications.Builder(builder).addAction(commentAction).build();
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(issue.id, builder.build());
+        notificationManager.notify(issue.id, notificaion);
     }
 }
