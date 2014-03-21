@@ -57,13 +57,18 @@ android {
     buildTypes {
         release {
             signingConfig signingConfigs.release
+
+            buildConfigField "String", "API_CLIENT_ID", "\"$System.env.GITHUB_CLIENT_ID\""
+            buildConfigField "String", "API_CLIENT_SECRET", "\"$System.env.GITHUB_CLIENT_SECRET\""
         }
 
         debug {
             versionNameSuffix " Debug"
+
+            buildConfigField "String", "API_CLIENT_ID", "\"$System.env.GITHUB_CLIENT_ID\""
+            buildConfigField "String", "API_CLIENT_SECRET", "\"$System.env.GITHUB_CLIENT_SECRET\""
         }
     }
-
 }
 
 /** Uncomment if you want large heap to be anabled during CI task

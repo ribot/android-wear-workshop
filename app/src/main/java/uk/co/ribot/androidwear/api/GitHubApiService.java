@@ -7,7 +7,9 @@ import uk.co.ribot.androidwear.model.Issue;
 
 import java.util.List;
 
-public interface GitHubService {
+public interface GitHubApiService {
     @GET("/repos/{owner}/{repoName}/issues")
-    void getIssues(@Path("owner") String owner, @Path("repoName") String repoName, Callback<List<Issue>> callback);
+    void getIssues(@Path("owner") String owner,
+                   @Path("repoName") String repoName,
+                   Callback<List<Issue>> callback);
 }
