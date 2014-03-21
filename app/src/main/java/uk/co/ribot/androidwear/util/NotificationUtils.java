@@ -55,27 +55,32 @@ public class NotificationUtils {
             builder.setLargeIcon(bigIcon);
         }
 
+        builder.addAction(R.drawable.ic_stat_close, context.getString(R.string.close), getCloseActionIntent(context, issue));
+
+        WearableNotifications.Builder wearableBuilder = new WearableNotifications.Builder(builder);
+        wearableBuilder.addAction(getCommentAction(context, issue));
+
+        Notification notificaion = wearableBuilder.build();
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(issue.id, notificaion);
+    }
+
+    private static PendingIntent getCloseActionIntent(Context context, Issue issue) {
         Intent closeIntent = GitHubService.getActionCloseIntent(context, issue);
         PendingIntent closePendingIntent = PendingIntent.getService(context, 0, closeIntent, 0);
-        builder.addAction(R.drawable.ic_stat_close, context.getString(R.string.close), closePendingIntent);
+        return closePendingIntent;
+    }
 
-        
-
+    private static Action getCommentAction(Context context, Issue issue) {
         RemoteInput commentRemoteInput = new RemoteInput.Builder(GitHubService.EXTRA_COMMENT)
                 .setLabel("What's your comment")
                 .build();
 
         Intent commentIntent = GitHubService.getActionCommentIntent(context, issue);
-        
         PendingIntent commentPendingIntent = PendingIntent.getService(context, 0, commentIntent, 0);
         
-        Action commentAction = new Action.Builder(R.drawable.ic_stat_comment, context.getString(R.string.comment), commentPendingIntent)
+        return new Action.Builder(R.drawable.ic_stat_comment, context.getString(R.string.comment), commentPendingIntent)
                 .addRemoteInput(commentRemoteInput)
                 .build();
-
-        Notification notificaion = new WearableNotifications.Builder(builder).addAction(commentAction).build();
-
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(issue.id, notificaion);
     }
 }
