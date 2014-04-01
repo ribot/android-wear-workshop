@@ -55,7 +55,15 @@ public class NotificationUtils {
             builder.setLargeIcon(bigIcon);
         }
 
+        builder.addAction(R.drawable.ic_stat_close, context.getString(R.string.close), getCloseActionIntent(context, issue));
+
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(issue.id, builder.build());
+    }
+
+    private static PendingIntent getCloseActionIntent(Context context, Issue issue) {
+        Intent closeIntent = GitHubService.getActionCloseIntent(context, issue);
+        PendingIntent closePendingIntent = PendingIntent.getService(context, 0, closeIntent, 0);
+        return closePendingIntent;
     }
 }
