@@ -63,6 +63,10 @@ public class NotificationUtils {
         WearableNotifications.Builder wearableBuilder = new WearableNotifications.Builder(builder);
         wearableBuilder.addAction(getCommentAction(context, issue));
 
+        if (comments.size() > 3) {
+            comments = comments.subList(comments.size()-3, comments.size());
+        }
+
         wearableBuilder.addPages(getCommentPages(context, comments));
 
         Notification notificaion = wearableBuilder.build();
