@@ -64,6 +64,12 @@ public class NotificationUtils {
         WearableNotifications.Builder wearableBuilder = new WearableNotifications.Builder(builder);
         wearableBuilder.addAction(getCommentAction(context, issue));
 
+        if (comments.size() > 3) {
+            comments = comments.subList(comments.size()-3, comments.size());
+        }
+
+        wearableBuilder.addPages(getCommentPages(context, comments));
+
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(issue.id, wearableBuilder.build());
     }
@@ -85,5 +91,23 @@ public class NotificationUtils {
         return new Action.Builder(R.drawable.ic_stat_comment, context.getString(R.string.comment), commentPendingIntent)
                 .addRemoteInput(commentRemoteInput)
                 .build();
+    }
+
+    private static List<Notification> getCommentPages(Context context, List<Comment> comments) {
+        ArrayList pages = new ArrayList<Notification>();
+
+        for (Comment comment : comments) {
+            BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
+            bigTextStyle.setBigContentTitle(comment.user.username)
+                    .bigText(comment.body);
+            
+            Notification notification = new NotificationCompat.Builder(context)
+                    .setStyle(bigTextStyle)
+                    .build();
+            
+            pages.add(notification);
+        }
+
+        return pages;
     }
 }
