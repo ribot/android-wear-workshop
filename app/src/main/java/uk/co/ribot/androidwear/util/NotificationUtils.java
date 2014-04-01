@@ -17,6 +17,10 @@ import java.util.List;
 import java.util.ArrayList;
 import android.support.v4.app.NotificationCompat.BigTextStyle;
 
+import android.preview.support.wearable.notifications.RemoteInput;
+import android.preview.support.wearable.notifications.WearableNotifications;
+import android.preview.support.wearable.notifications.WearableNotifications.Action;
+
 import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class NotificationUtils {
@@ -57,13 +61,29 @@ public class NotificationUtils {
 
         builder.addAction(R.drawable.ic_stat_close, context.getString(R.string.close), getCloseActionIntent(context, issue));
 
+        WearableNotifications.Builder wearableBuilder = new WearableNotifications.Builder(builder);
+        wearableBuilder.addAction(getCommentAction(context, issue));
+
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(issue.id, builder.build());
+        notificationManager.notify(issue.id, wearableBuilder.build());
     }
 
     private static PendingIntent getCloseActionIntent(Context context, Issue issue) {
         Intent closeIntent = GitHubService.getActionCloseIntent(context, issue);
         PendingIntent closePendingIntent = PendingIntent.getService(context, 0, closeIntent, 0);
         return closePendingIntent;
+    }
+
+    private static Action getCommentAction(Context context, Issue issue) {
+        RemoteInput commentRemoteInput = new RemoteInput.Builder(GitHubService.EXTRA_COMMENT)
+                .setLabel("Your comment")
+                .build();
+
+        Intent commentIntent = GitHubService.getActionCommentIntent(context, issue);
+        PendingIntent commentPendingIntent = PendingIntent.getService(context, 0, commentIntent, 0);
+        
+        return new Action.Builder(R.drawable.ic_stat_comment, context.getString(R.string.comment), commentPendingIntent)
+                .addRemoteInput(commentRemoteInput)
+                .build();
     }
 }
