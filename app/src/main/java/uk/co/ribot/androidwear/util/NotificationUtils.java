@@ -58,56 +58,7 @@ public class NotificationUtils {
             builder.setLargeIcon(bigIcon);
         }
 
-        builder.addAction(R.drawable.ic_stat_close, context.getString(R.string.close), getCloseActionIntent(context, issue));
-
-        WearableNotifications.Builder wearableBuilder = new WearableNotifications.Builder(builder);
-        wearableBuilder.addAction(getCommentAction(context, issue));
-
-        if (comments.size() > 3) {
-            comments = comments.subList(comments.size()-3, comments.size());
-        }
-
-        wearableBuilder.addPages(getCommentPages(context, comments));
-
-        Notification notificaion = wearableBuilder.build();
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(issue.id, notificaion);
-    }
-
-    private static PendingIntent getCloseActionIntent(Context context, Issue issue) {
-        Intent closeIntent = GitHubService.getActionCloseIntent(context, issue);
-        PendingIntent closePendingIntent = PendingIntent.getService(context, 0, closeIntent, 0);
-        return closePendingIntent;
-    }
-
-    private static Action getCommentAction(Context context, Issue issue) {
-        RemoteInput commentRemoteInput = new RemoteInput.Builder(GitHubService.EXTRA_COMMENT)
-                .setLabel("What's your comment")
-                .build();
-
-        Intent commentIntent = GitHubService.getActionCommentIntent(context, issue);
-        PendingIntent commentPendingIntent = PendingIntent.getService(context, 0, commentIntent, 0);
-        
-        return new Action.Builder(R.drawable.ic_stat_comment, context.getString(R.string.comment), commentPendingIntent)
-                .addRemoteInput(commentRemoteInput)
-                .build();
-    }
-
-    private static List<Notification> getCommentPages(Context context, List<Comment> comments) {
-        ArrayList pages = new ArrayList<Notification>();
-
-        for (Comment comment : comments) {
-            BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
-            bigTextStyle.setBigContentTitle(comment.user.username)
-                    .bigText(comment.body);
-            
-            Notification notification = new NotificationCompat.Builder(context)
-                    .setStyle(bigTextStyle)
-                    .build();
-            
-            pages.add(notification);
-        }
-
-        return pages;
+        notificationManager.notify(issue.id, builder.build());
     }
 }
